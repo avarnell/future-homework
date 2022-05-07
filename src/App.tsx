@@ -1,25 +1,31 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import { Leftbar } from "./containers/Leftbar/Leftbar";
+import { ContentDetail } from "./containers/ContentDetail/ContentDetail";
+import { Header } from "./containers/Header/Header";
+import { ExerciseProvider } from "./context/ExerciseContext";
 
 function App() {
+  const [exerciseList, setExerciseList] = useState(null);
+
+  useEffect(() => {
+    fetch("https://candidate.staging.future.co/sandbox/api/exercises")
+      .then((res) => res.json())
+      .then((data) => {
+        setExerciseList(data);
+      });
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ExerciseProvider>
+      <div className="App">
+        <div className="app-wrapper">
+          <Header />
+          <Leftbar exerciseList={exerciseList} />
+          <ContentDetail />
+        </div>
+      </div>
+    </ExerciseProvider>
   );
 }
 
